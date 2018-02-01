@@ -6,7 +6,7 @@ import (
 	"strings"
 	"path/filepath"
 
-	"github.com/samkreter/DSA-Workshop/util/extract"
+	"github.com/hubertsui/better-etling/util/extract"
 )
 
 var (

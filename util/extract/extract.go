@@ -7,7 +7,7 @@ import (
 	"strings"
 	"io"
 	"os"
-	"github.com/samkreter/DSA-Workshop/util/downloader"
+	"github.com/hubertsui/better-etling/util/downloader"
 )
 
 // DownloadAndUnzip takes in 
