@@ -2,11 +2,12 @@ package downloader
 
 import (
 	"fmt"
-	"github.com/dustin/go-humanize"
 	"io"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/dustin/go-humanize"
 )
 
 // WriteCounter counts the number of bytes written to it. It implements to the io.Writer
@@ -33,11 +34,7 @@ func (wc WriteCounter) PrintProgress() {
 	fmt.Printf("\rDownloading... %s complete", humanize.Bytes(wc.Total))
 }
 
-// DownloadFile will download a url to a local file. It's efficient because it will
-// write as it downloads and not load the whole file into memory. We pass an io.TeeReader
-// into Copy() to report progress on the download.
-func DownloadFile(filepath string, url string) error {
-
+func downloadFile(filepath string, url string) error {
 	// Create the file, but give it a tmp file extension, this means we won't overwrite a
 	// file until it's downloaded, but we'll remove the tmp extension once downloaded.
 	out, err := os.Create(filepath + ".tmp")
@@ -62,6 +59,18 @@ func DownloadFile(filepath string, url string) error {
 
 	// The progress use the same line so print a new line once it's finished downloading
 	fmt.Print("\n")
+	return nil
+}
+
+// DownloadFile will download a url to a local file. It's efficient because it will
+// write as it downloads and not load the whole file into memory. We pass an io.TeeReader
+// into Copy() to report progress on the download.
+func DownloadFile(filepath string, url string) error {
+
+	err := downloadFile(filepath, url)
+	if err != nil {
+		return err
+	}
 
 	err = os.Rename(filepath+".tmp", filepath)
 	if err != nil {
