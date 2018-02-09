@@ -5,3 +5,7 @@ The application with separate common pieces of the ETLing process into separate 
 
 Using ACI, a user can define container groups with the exact elements they want. For example put the unzip and postgres modules together and can download a zip file from a datasource, unzip it then feed it into a databases all without writing a line of code. Also only pay per second usign the ACI instance. 
 
+
+## References
+1. Akari Asai, Sara Evensen, Behzad Golshan, Alon Halevy, Vivian Li, Andrei Lopatenko, Daniela Stepanov, Yoshihiko Suhara, Wang-Chiew Tan, Yinzhan Xu, 
+``HappyDB: A Corpus of 100,000 Crowdsourced Happy Moments'', LREC '18, May 2018. (to appear)
