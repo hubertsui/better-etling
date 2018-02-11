@@ -28,7 +28,11 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	//create table words if it is not exists
+	_, err = db.Query("do $do$ begin IF ( to_regclass('public.words') is null ) then create table words(name text not null primary key, count integer not null); end if; end $do$")
+	if err != nil {
+		panic(err)
+	}
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
 			fmt.Fprintf(w, "USE POST TO UPLOAD DATA")
@@ -45,7 +49,7 @@ func main() {
 			if err := json.Unmarshal(body, &data); err != nil {
 				panic(err)
 			}
-			query := fmt.Sprintf("INSERT INTO words VALUES('%s',%d);", data.Name, data.Count)
+			query := fmt.Sprintf(`insert into "words" values('%s',%d) on conflict(name) do update set "count"=excluded."count"`, data.Name, data.Count)
 			_, err = db.Query(query)
 			if err != nil {
 				panic(err)
