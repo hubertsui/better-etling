@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"regexp"
-	"sort"
 	"strings"
 	"time"
 )
@@ -81,10 +80,11 @@ func main() {
 	}
 
 	text := strings.ToLower(buf.String())
-
+	allSignals := regexp.MustCompile("[^a-z]+")
 	for _, v := range LIMIT_WORDS {
 		text = strings.Replace(text, " "+v, "", -1)
 		text = strings.Replace(text, v+" ", "", -1)
+		text = allSignals.ReplaceAllString(text, " ")
 	}
 
 	regex := regexp.MustCompile("[a-z]*")
@@ -103,22 +103,23 @@ func main() {
 	}
 
 	words := make(Words, len(m), len(m))
+
+	out, err := os.Create("./result.csv")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer out.Close()
 	// words = [10]Word{}
 	i := 0
 	count := 0
 	for k, v := range m {
 		words[i] = Word{name: k, count: v}
-		if v > 10 {
+		if v >= 100 && len(k) > 1 {
 			count++
+			out.WriteString(fmt.Sprintf("%s,%d\n", k, v))
 			save(serverUrl, words[i])
 		}
 		i++
-	}
-
-	sort.Sort(words)
-
-	for i := 0; i < 10; i++ {
-		log.Println(words[i])
 	}
 
 	// w.WriteHeader(500) // unprocessable entity
