@@ -6,7 +6,8 @@
             "type": "string"
         },
         "storageShareName": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "acishare"
         },
         "administratorLogin": {
             "type": "string",
