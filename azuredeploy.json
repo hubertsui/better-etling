@@ -124,6 +124,11 @@
                                 "memoryInGb": 1.5
                             }
                         },
+                        "volumeMounts": [{
+                            "name": "etl-volumn",
+                            "mountPath": "/mnt/shared",
+                            "readOnly": false
+                        }],
                         "environmentVariables": [{
                             "name": "CONNECTION_STRING",
                             "value": "[variables('connectionString')]"
