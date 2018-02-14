@@ -4,7 +4,9 @@ COPY . /go/src/github.com/samkreter/DSA-Workshop/cmd/postgres/
 RUN go get github.com/lib/pq
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o run .
 
-FROM scratch
+FROM golang:1.9.2
 WORKDIR /root/
+EXPOSE 80
 COPY --from=builder /go/src/github.com/samkreter/DSA-Workshop/cmd/postgres/run .
+COPY --from=builder /go/src/github.com/samkreter/DSA-Workshop/cmd/postgres/static/ ./static/
 CMD ["./run"]

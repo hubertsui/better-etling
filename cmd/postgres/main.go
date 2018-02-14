@@ -17,36 +17,25 @@ var (
 	defaultConnStr = "postgresql://postgres:password@localhost/postgres?sslmode=disable"
 )
 
-func checkTableExist(connStr string) {
-	db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-	//create table words if it is not exists
-	_, err = db.Query("do $do$ begin IF ( to_regclass('public.words') is null ) then create table words(name text not null primary key, count integer not null); end if; end $do$")
-	if err != nil {
-		panic(err)
-	}
-}
-
 func main() {
-
 	connStr, ok := os.LookupEnv("CONNECTION_STRING")
 	if !ok {
 		log.Println("CONNECTION_STRING not set. Using default.")
 		connStr = defaultConnStr
 	}
-	checkTableExist(connStr)
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	db.SetMaxOpenConns(10)
+	_, err = db.Query("do $do$ begin IF ( to_regclass('public.words') is null ) then create table words(name text not null primary key, count integer not null); end if; end $do$")
+	if err != nil {
+		panic(err)
+	}
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
 			fmt.Fprintf(w, "USE POST TO UPLOAD DATA")
 		} else if r.Method == "POST" {
-			db, err := sql.Open("postgres", connStr)
-			if err != nil {
-				log.Fatal(err)
-			}
-			defer db.Close()
 			var data Word
 			body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 			if err != nil {

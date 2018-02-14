@@ -14,8 +14,9 @@ import (
 )
 
 var (
-	defaultFilePath  = "./cleaned_hm.csv"
-	defaultServerUrl = "http://localhost:8080"
+	defaultFilePath   = "./cleaned_hm.csv"
+	defaultResultPath = "./result.csv"
+	defaultServerUrl  = "http://localhost:8080"
 )
 
 func pathExists(path string) (bool, error) {
@@ -46,6 +47,12 @@ func main() {
 		filePath = defaultFilePath
 	}
 
+	resultPath, ok := os.LookupEnv("RESULT_PATH")
+	if !ok {
+		log.Println("RESULT_PATH not set. Using default.")
+		resultPath = defaultResultPath
+	}
+
 	serverUrl, ok := os.LookupEnv("SERVER_URL")
 	if !ok {
 		log.Println("SERVER_URL not set. Using default.")
@@ -57,7 +64,8 @@ func main() {
 		if exists {
 			break
 		}
-		time.Sleep(time.Second)
+		log.Println("Source file is not exist, retry in 1s")
+		time.Sleep(1 * time.Second)
 	}
 
 	in, err := ioutil.ReadFile(filePath)
@@ -104,17 +112,21 @@ func main() {
 
 	words := make(Words, len(m), len(m))
 
-	out, err := os.Create("./result.csv")
+	out, err := os.Create(resultPath)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer out.Close()
-	// words = [10]Word{}
+	out.WriteString("Word,Count\n")
+	for !isServerExist(serverUrl) {
+		log.Println("Server is not started, retry in 10s")
+		time.Sleep(10 * time.Second)
+	}
 	i := 0
 	count := 0
 	for k, v := range m {
 		words[i] = Word{name: k, count: v}
-		if v >= 100 && len(k) > 1 {
+		if v >= 500 && len(k) > 1 {
 			count++
 			out.WriteString(fmt.Sprintf("%s,%d\n", k, v))
 			save(serverUrl, words[i])
@@ -127,6 +139,12 @@ func main() {
 	// w.Write([]byte{})
 
 	log.Println(count)
+	log.Println(serverUrl)
+}
+
+func isServerExist(url string) bool {
+	_, err := http.Get(url)
+	return err == nil
 }
 
 func save(url string, w Word) {

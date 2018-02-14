@@ -13,26 +13,25 @@ import (
 )
 
 var (
-	defaultConnStr = "host=serverless-demo-postgres.postgres.database.azure.com user=postgres@serverless-demo-postgres password=password123!@# dbname=postgres sslmode=verify-full"
+	defaultConnStr = "host=dsxoocfjox4w6postgres.postgres.database.azure.com user=postgres@dsxoocfjox4w6postgres password=password123!@#$ dbname=postgres sslmode=verify-full"
 )
 
 func main() {
-
 	connStr, ok := os.LookupEnv("CONNECTION_STRING")
 	if !ok {
 		log.Println("CONNECTION_STRING not set. Using default.")
 		connStr = defaultConnStr
 	}
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	db.SetMaxOpenConns(10)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
 			http.ServeFile(w, r, "./static/index.html")
 		} else if r.Method == "POST" {
-			db, err := sql.Open("postgres", connStr)
-			if err != nil {
-				log.Fatal(err)
-			}
-			defer db.Close()
 			w.Header().Set("Content-Type", "application/json;   charset=UTF-8")
 			rows, err := db.Query("select * from words")
 			if err != nil {
