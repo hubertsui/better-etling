@@ -2,26 +2,64 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
+	"encoding/csv"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"log"
-	"net/http"
 	"os"
+	"strings"
+	"time"
 
 	_ "github.com/lib/pq"
 )
 
 var (
-	defaultConnStr = "postgresql://postgres:password@localhost/postgres?sslmode=disable"
+	defaultConnStr  = "host=dsxoocfjox4w6postgres.postgres.database.azure.com user=postgres@dsxoocfjox4w6postgres password=password123!@# dbname=postgres sslmode=verify-full"
+	defaultFilePath = "./result.csv"
 )
 
+func pathExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
+}
+
 func main() {
+	filePath, ok := os.LookupEnv("FILE_PATH")
+	if !ok {
+		log.Println("FILE_PATH not set. Using default.")
+		filePath = defaultFilePath
+	}
 	connStr, ok := os.LookupEnv("CONNECTION_STRING")
 	if !ok {
 		log.Println("CONNECTION_STRING not set. Using default.")
 		connStr = defaultConnStr
+	}
+
+	for {
+		exists, _ := pathExists(filePath)
+		if exists {
+			break
+		}
+		log.Println("Source file is not exist, retry in 1s")
+		time.Sleep(1 * time.Second)
+	}
+
+	in, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	r := csv.NewReader(strings.NewReader(string(in)))
+
+	records, err := r.ReadAll()
+	if err != nil {
+		log.Fatal(err)
 	}
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
@@ -32,30 +70,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == "GET" {
-			fmt.Fprintf(w, "USE POST TO UPLOAD DATA")
-		} else if r.Method == "POST" {
-			var data Word
-			body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-			if err != nil {
-				panic(err)
-			}
-			if err := r.Body.Close(); err != nil {
-				panic(err)
-			}
-			w.Header().Set("Content-Type", "application/json;   charset=UTF-8")
-			if err := json.Unmarshal(body, &data); err != nil {
-				panic(err)
-			}
-			query := fmt.Sprintf(`insert into "words" values('%s',%d) on conflict(name) do update set "count"=excluded."count"`, data.Name, data.Count)
-			_, err = db.Query(query)
-			if err != nil {
-				panic(err)
-			}
-			fmt.Fprintf(w, "{\"status\":\"success\"}")
+	for i := 1; i < len(records); i++ {
+		query := fmt.Sprintf(`insert into "words" values('%s',%s) on conflict(name) do update set "count"=excluded."count"`, records[i][0], records[i][1])
+		rows, err := db.Query(query)
+		log.Printf("%d\n", i)
+		if err != nil {
+			log.Fatal(err)
 		}
-	})
-
-	log.Fatal(http.ListenAndServe(":8080", nil))
+		rows.Close()
+	}
 }

@@ -6,6 +6,5 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o run .
 
 FROM golang:1.9.2
 WORKDIR /root/
-EXPOSE 8080
 COPY --from=builder /go/src/github.com/samkreter/DSA-Workshop/cmd/postgres/run .
 CMD ["./run"]
