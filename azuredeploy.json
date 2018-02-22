@@ -16,19 +16,31 @@
         "administratorLoginPassword": {
             "type": "securestring",
             "defaultValue": "password123!@#"
+        },
+        "extractingContainerImage": {
+            "type": "string",
+            "defaultValue": "hubertsui/extracting:1.1"
+        },
+        "transformingContainerImage": {
+            "type": "string",
+            "defaultValue": "hubertsui/transforming:1.2"
+        },
+        "loadingContainerImage": {
+            "type": "string",
+            "defaultValue": "hubertsui/loading:1.2"
+        },
+        "renderingContainerImage": {
+            "type": "string",
+            "defaultValue": "hubertsui/rendering:1.1"
         }
     },
     "variables": {
         "postgresServerName": "[concat(toLower(uniqueString(resourceGroup().id)),'postgres')]",
         "postgresFirewallRuleName": "[concat(variables('postgresServerName'),'/firewall')]",
-        "container1name": "unzip",
-        "container1image": "hubertsui/unzip:1.1",
-        "container2name": "analyze",
-        "container2image": "hubertsui/analyze:1.2",
-        "container3name": "postgres",
-        "container3image": "hubertsui/postgres:1.2",
-        "container4name": "display",
-        "container4image": "hubertsui/display:1.1",
+        "extractingContainerName": "extracting",
+        "transformingContainerName": "transforming",
+        "loadingContainerName": "loading",
+        "renderingContainerName": "rendering",
         "connectionString": "[concat('host=',variables('postgresServerName'),'.postgres.database.azure.com user=',parameters('administratorLogin'),'@',variables('postgresServerName'),' password=',parameters('administratorLoginPassword'),' dbname=postgres sslmode=verify-full')]"
     },
     "resources": [{
@@ -71,9 +83,9 @@
         ],
         "properties": {
             "containers": [{
-                    "name": "[variables('container1name')]",
+                    "name": "[variables('extractingContainerName')]",
                     "properties": {
-                        "image": "[variables('container1image')]",
+                        "image": "[parameters('extractingContainerImage')]",
                         "resources": {
                             "requests": {
                                 "cpu": 1,
@@ -92,9 +104,9 @@
                     }
                 },
                 {
-                    "name": "[variables('container2name')]",
+                    "name": "[variables('transformingContainerName')]",
                     "properties": {
-                        "image": "[variables('container2image')]",
+                        "image": "[parameters('transformingContainerImage')]",
                         "resources": {
                             "requests": {
                                 "cpu": 1,
@@ -116,9 +128,9 @@
                     }
                 },
                 {
-                    "name": "[variables('container3name')]",
+                    "name": "[variables('loadingContainerName')]",
                     "properties": {
-                        "image": "[variables('container3image')]",
+                        "image": "[parameters('loadingContainerImage')]",
                         "resources": {
                             "requests": {
                                 "cpu": 1,
@@ -140,9 +152,9 @@
                     }
                 },
                 {
-                    "name": "[variables('container4name')]",
+                    "name": "[variables('loadingContainerName')]",
                     "properties": {
-                        "image": "[variables('container4image')]",
+                        "image": "[parameters('loadingContainerImage')]",
                         "resources": {
                             "requests": {
                                 "cpu": 1,

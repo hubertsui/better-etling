@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	defaultConnStr  = "host=dsxoocfjox4w6postgres.postgres.database.azure.com user=postgres@dsxoocfjox4w6postgres password=password123!@# dbname=postgres sslmode=verify-full"
+	defaultConnStr  = "postgresql://localhost?sslmode=disable"
 	defaultFilePath = "./result.csv"
 )
 
