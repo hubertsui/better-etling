@@ -76,13 +76,13 @@ If you want to build your own docker images, please clone this repo, and install
 
    ![](images/deploy-01.png)
 
-2. Execute the commands below to choose subscription:
+2. Execute the commands below to choose subscription.
 
    ```powershell
    az account set --subscription SELECTED_SUBSCRIPTION_ID
    ```
 
-3. Execute the commands below which creates a new resource group:
+3. Execute the commands below which creates a new resource group.
 
    > Note: Change the placeholder `[RESOURCE_GROUP_NAME]` to a new resource group to be created.
    
@@ -94,7 +94,7 @@ If you want to build your own docker images, please clone this repo, and install
    az group create --location eastus --name $ACI_PERS_RESOURCE_GROUP
    ```
 
-4. Execute the commands below which creates the storage account:
+4. Execute the commands below which creates the storage account.
 
    ```powershell
    az storage account create \
@@ -104,14 +104,14 @@ If you want to build your own docker images, please clone this repo, and install
     --sku Standard_LRS
    ```
 
-5. Execute the commands below which creates the file share:
+5. Execute the commands below which creates the file share.
 
    ```powershell
    export AZURE_STORAGE_CONNECTION_STRING=`az storage account show-connection-string --resource-group $ACI_PERS_RESOURCE_GROUP --name $ACI_PERS_STORAGE_ACCOUNT_NAME --output tsv`
    az storage share create -n $ACI_PERS_SHARE_NAME
    ```
 
-6. Execute the commands below which shows the storage account created previously:
+6. Execute the commands below which shows the storage account created previously.
 
    ```powershell
    echo $ACI_PERS_STORAGE_ACCOUNT_NAME
@@ -124,9 +124,11 @@ If you want to build your own docker images, please clone this repo, and install
 
    [![Deploy to Azure](https://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fhubertsui%2Fbetter-etling%2Fmaster%2Fazuredeploy.json)
 
-2. Fill in the values on the deployment page:
-   * **Storage Account Name**: the name of the storage account you just created.
-   * **Storage Share Name**: the name of the file share. In this case, it's `acishare` .
+2. Choose the resource group created in previous steps.
+
+3. Fill in the values on the deployment page.
+   * **Storage Account Name**: the name of the storage account created in previous steps.
+   * **Storage Share Name**: the name of the file share created in previous steps, which is `acishare` by default.
    * **Administrator Login**:  the user name of the postgres database.
    * **Administrator Login Password**: the password of the postgres database, it must meet the complexity requirements, e.g. `password123!@#` .
    * **Extracting Container Image**: the docker image you build for extracting container.
@@ -137,7 +139,7 @@ If you want to build your own docker images, please clone this repo, and install
 
    ![](images/deploy-03.png)
 
-3. Click **Purchase**.
+4. Click **Purchase**.
 
 ## Chek the Demo
 
