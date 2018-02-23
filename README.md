@@ -10,7 +10,7 @@
 
 [Deploy Azure Components](#deploy-azure-components)
 
-[Check the Demo](#check-result-of-the-demo)
+[Check the Demo](#check-the-demo)
 
 [References](#references)
 
