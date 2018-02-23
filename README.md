@@ -6,13 +6,11 @@
 
 [Build Docker Images](#build-docker-images)
 
-[Deploy Azure Components with ARM Template](#deploy-azure-components-with-arm-template)
+[Create Azure Storage Account and File Share](#create-azure-storage-account-and-file-share)
 
-* [Create Azure Storage Account and File Share](#create-azure-storage-account-and-file-share)
-* [GitHub Authorize](#github-authorize)
-* [Deploy Azure Components](#deploy-azure-components)
+[Deploy Azure Components](#deploy-azure-components)
 
-[Check Result of the Demo](#check-result-of-the-demo)
+[Check the Demo](#check-result-of-the-demo)
 
 [References](#references)
 
@@ -36,47 +34,43 @@ If you want to build your own docker images, please clone this repo, and install
 
 ## Build Docker Images
 
-1. Clone the repo, open with Visual Studio Code
+1. Clone the repo with Visual Studio Code.
 
-2. Execute the commands below which builds and pushes extracting image:
+2. Open **View > Integrated Terminal**.
+
+3. Execute the commands below which builds and pushes extracting image to Docker Hub.
 
    ```powershell
    cd cmd/extracting
-   docker build -t YOURDOCKERACCOUNTNAME/extracting:1.1 .
-   docker push YOURDOCKERACCOUNTNAME/extracting:1.1
+   docker build -t YOURDOCKERACCOUNTNAME/extracting:1.0 .
+   docker push YOURDOCKERACCOUNTNAME/extracting:1.0
    ```
-   ![](Images/docker-01.png)
 
-2. Execute the commands below which builds and pushes transforming image:
+4. Execute the commands below which builds and pushes transforming image to Docker Hub.
 
    ```powershell
    cd ../extracting
-   docker build -t YOURDOCKERACCOUNTNAME/transforming:1.2 .
-   docker push YOURDOCKERACCOUNTNAME/transforming:1.2
+   docker build -t YOURDOCKERACCOUNTNAME/transforming:1.0 .
+   docker push YOURDOCKERACCOUNTNAME/transforming:1.0
    ```
-   ![](Images/docker-02.png)
 
-3. Execute the commands below which builds and pushes loading image:
+5. Execute the commands below which builds and pushes loading image to Docker Hub.
 
    ```powershell
    cd ../extracting
-   docker build -t YOURDOCKERACCOUNTNAME/loading:1.2 .
-   docker push YOURDOCKERACCOUNTNAME/loading:1.2
+   docker build -t YOURDOCKERACCOUNTNAME/loading:1.0 .
+   docker push YOURDOCKERACCOUNTNAME/loading:1.0
    ```
-   ![](Images/docker-03.png)
 
-4. Execute the commands below which builds and pushes rendering image:
+6. Execute the commands below which builds and pushes rendering image to Docker Hub.
 
    ```powershell
    cd ../extracting
-   docker build -t YOURDOCKERACCOUNTNAME/rendering:1.1 .
-   docker push YOURDOCKERACCOUNTNAME/rendering:1.1
+   docker build -t YOURDOCKERACCOUNTNAME/rendering:1.0 .
+   docker push YOURDOCKERACCOUNTNAME/rendering:1.0
    ```
-   ![](Images/docker-04.png)
 
-## Deploy Azure Components with ARM Template
-
-### Create Azure Storage Account and File Share
+## Create Azure Storage Account and File Share
 
 1. Open the Shell in Azure Portal
 
@@ -88,17 +82,19 @@ If you want to build your own docker images, please clone this repo, and install
    az account set --subscription SELECTED_SUBSCRIPTION_ID
    ```
 
-3. Execute the commands below which creates a resource group:
+3. Execute the commands below which creates a new resource group:
 
+   > Note: Change the placeholder `[RESOURCE_GROUP_NAME]` to a new resource group to be created.
+   
    ```powershell
-   ACI_PERS_RESOURCE_GROUP=MSAzure-ACIAKS-ETL-Demo
+   ACI_PERS_RESOURCE_GROUP=[RESOURCE_GROUP_NAME]
    ACI_PERS_STORAGE_ACCOUNT_NAME=mystorageaccount$RANDOM
    ACI_PERS_LOCATION=eastus
    ACI_PERS_SHARE_NAME=acishare
    az group create --location eastus --name $ACI_PERS_RESOURCE_GROUP
    ```
 
-4. Execute the commands below which create the storage account:
+4. Execute the commands below which creates the storage account:
 
    ```powershell
    az storage account create \
@@ -108,98 +104,52 @@ If you want to build your own docker images, please clone this repo, and install
     --sku Standard_LRS
    ```
 
-5. Execute the commands below which create the file share:
+5. Execute the commands below which creates the file share:
 
    ```powershell
    export AZURE_STORAGE_CONNECTION_STRING=`az storage account show-connection-string --resource-group $ACI_PERS_RESOURCE_GROUP --name $ACI_PERS_STORAGE_ACCOUNT_NAME --output tsv`
    az storage share create -n $ACI_PERS_SHARE_NAME
    ```
 
-6. Execute the commands below which shows the **Storage Account Name**:
+6. Execute the commands below which shows the storage account created previously:
 
    ```powershell
    echo $ACI_PERS_STORAGE_ACCOUNT_NAME
    ```
    ![](Images/deploy-02.png)
 
-### GitHub Authorize
+## Deploy Azure Components
 
-1. Generate Token
+1. Click this button to navigate to Azure portal deployment page.
 
-   - Open [https://github.com/settings/tokens](https://github.com/settings/tokens) in your web browser.
+   [![Deploy to Azure](https://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fhubertsui%2Fbetter-etling%2Fmaster%2Fazuredeploy.json)
 
-   - Sign into your GitHub account where you forked this repository.
-
-   - Click **Generate Token**.
-
-   - Enter a value in the **Token description** text box.
-
-   - Select the following s (your selections should match the screenshot below):
-
-     - repo (all) -> repo:status, repo_deployment, public_repo
-     - admin:repo_hook -> read:repo_hook
-
-     ![](Images/github-new-personal-access-token.png)
-
-   - Click **Generate token**.
-
-   - Copy the token.
-
-2. Add the GitHub Token to Azure in the Azure Resource Explorer
-
-   - Open [https://resources.azure.com/providers/Microsoft.Web/sourcecontrols/GitHub](https://resources.azure.com/providers/Microsoft.Web/sourcecontrols/GitHub) in your web browser.
-
-   - Log in with your Azure account.
-
-   - Selected the correct Azure subscription.
-
-   - Select **Read/Write** mode.
-
-   - Click **Edit**.
-
-   - Paste the token into the **token parameter**.
-
-     ![](Images/update-github-token-in-azure-resource-explorer.png)
-
-   - Click **PUT**.
-
-### Deploy Azure Components
-
-1. Fork this repository to your GitHub account.
-
-2. Click the Deploy to Azure Button:
-
-   [![Deploy to Azure](https://camo.githubusercontent.com/9285dd3998997a0835869065bb15e5d500475034/687474703a2f2f617a7572656465706c6f792e6e65742f6465706c6f79627574746f6e2e706e67)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fhubertsui%2Fbetter-etling%2Fmaster%2Fazuredeploy.json)
-
-3. Fill in the values on the deployment page:
+2. Fill in the values on the deployment page:
+   * **Storage Account Name**: the name of the storage account you just created.
+   * **Storage Share Name**: the name of the file share. In this case, it's `acishare` .
+   * **Administrator Login**:  the user name of the postgres database.
+   * **Administrator Login Password**: the password of the postgres database, it must meet the complexity requirements, e.g. `password123!@#` .
+   * **Extracting Container Image**: the docker image you build for extracting container.
+   * **Transforming Container Image**: the docker image you build for transforming container.
+   * **Loading Container Image**: the docker image you build for loading container.
+   * **Rendering Container Image**: the docker image you build for rendering container.
+   * Check **I agree to the terms and conditions stated above**.
 
    ![](Images/deploy-03.png)
 
-   You have collected most of the values in previous steps. For the rest parameters:
+3. Click **Purchase**.
 
-   * **Storage Account Name**: the name of the storage account you just created
-   * **Storage Share Name**: the name of the file share. In this case, it's acishare. 
-   * **Administrator Login**:  the user name of the postgres database. The default value is postgres
-   * **Administrator Login Password**: the password of the postgres database. The default value is password123!@#. It must contain numbers, letters and symbols.
-   * **Extracting Container Image**: the docker image you build for extracting container. The default value is hubertsui/extracting:1.1.
-   * **Transforming Container Image**: the docker image you build for transforming container. The default value is hubertsui/transforming:1.2.
-   * **Loading Container Image**: the docker image you build for loading container. The default value is hubertsui/loading:1.2.
-   * **Rendering Container Image**: the docker image you build for rendering container. The default value is hubertsui/rendering:1.1.
-   * Check **I agree to the terms and conditions stated above**.
+## Chek the Demo
 
-4. Click **Purchase**.
-
-## Chek Result of the Demo
-
-1. Open the Resource Group **MSAzure-ACIAKS-ETL-Demo** in Auzre Portal
+1. Open the resource group just created.
 
    ![](Images/deploy-04.png)
 
-2. Click the MS-ACIAKS-ETLContainerGroups, statuses of containers should be like this:
+2. Click the container group **MS-ACIAKS-ETLContainerGroups**, state of the first 3 containers are **Terminated**, while the last one is always **Running** to serve the Word Cloud.
 
    ![](Images/deploy-05.png)
 
-3. Open the IP address of containers, and the web page should be like this:
+3. Copy the **IP address** from the container group blade, and open it in the browser to check the Word Cloud.
 
    ![](Images/deploy-06.png)
 

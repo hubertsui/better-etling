@@ -14,8 +14,7 @@
             "defaultValue": "postgres"
         },
         "administratorLoginPassword": {
-            "type": "securestring",
-            "defaultValue": "password123!@#"
+            "type": "securestring"
         },
         "extractingContainerImage": {
             "type": "string",
