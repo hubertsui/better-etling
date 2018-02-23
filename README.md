@@ -74,7 +74,7 @@ If you want to build your own docker images, please clone this repo, and install
 
 1. Open the Shell in Azure Portal
 
-   ![](Images/deploy-01.png)
+   ![](images/deploy-01.png)
 
 2. Execute the commands below to choose subscription:
 
@@ -116,7 +116,7 @@ If you want to build your own docker images, please clone this repo, and install
    ```powershell
    echo $ACI_PERS_STORAGE_ACCOUNT_NAME
    ```
-   ![](Images/deploy-02.png)
+   ![](images/deploy-02.png)
 
 ## Deploy Azure Components
 
@@ -135,7 +135,7 @@ If you want to build your own docker images, please clone this repo, and install
    * **Rendering Container Image**: the docker image you build for rendering container.
    * Check **I agree to the terms and conditions stated above**.
 
-   ![](Images/deploy-03.png)
+   ![](images/deploy-03.png)
 
 3. Click **Purchase**.
 
@@ -143,15 +143,15 @@ If you want to build your own docker images, please clone this repo, and install
 
 1. Open the resource group just created.
 
-   ![](Images/deploy-04.png)
+   ![](images/deploy-04.png)
 
 2. Click the container group **MS-ACIAKS-ETLContainerGroups**, state of the first 3 containers are **Terminated**, while the last one is always **Running** to serve the Word Cloud.
 
-   ![](Images/deploy-05.png)
+   ![](images/deploy-05.png)
 
 3. Copy the **IP address** from the container group blade, and open it in the browser to check the Word Cloud.
 
-   ![](Images/deploy-06.png)
+   ![](images/deploy-06.png)
 
 ## References
 1. Akari Asai, Sara Evensen, Behzad Golshan, Alon Halevy, Vivian Li, Andrei Lopatenko, Daniela Stepanov, Yoshihiko Suhara, Wang-Chiew Tan, Yinzhan Xu, 
