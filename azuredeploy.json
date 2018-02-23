@@ -152,9 +152,9 @@
                     }
                 },
                 {
-                    "name": "[variables('loadingContainerName')]",
+                    "name": "[variables('renderingContainerName')]",
                     "properties": {
-                        "image": "[parameters('loadingContainerImage')]",
+                        "image": "[parameters('renderingContainerImage')]",
                         "resources": {
                             "requests": {
                                 "cpu": 1,
