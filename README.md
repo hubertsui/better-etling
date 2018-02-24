@@ -141,7 +141,7 @@ If you want to build your own docker images, please clone this repo, and install
 
 4. Click **Purchase**.
 
-## Chek the Demo
+## Check the Demo
 
 1. Open the resource group just created.
 
