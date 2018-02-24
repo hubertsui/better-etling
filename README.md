@@ -1,4 +1,4 @@
-# MS Azure ACI/AKS ETL Demo
+# Extracting, transforming, and loading data with ACI
 
 **Table of content**
 
