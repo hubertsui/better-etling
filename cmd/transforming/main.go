@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"net/http"
 	"os"
 	"regexp"
 	"strings"
@@ -97,8 +96,6 @@ func main() {
 		}
 	}
 
-	words := make(Words, len(m), len(m))
-
 	out, err := os.Create(resultPath + ".tmp")
 	if err != nil {
 		log.Fatal(err)
@@ -107,7 +104,6 @@ func main() {
 	i := 0
 	count := 0
 	for k, v := range m {
-		words[i] = Word{name: k, count: v}
 		if v >= 500 && len(k) > 1 {
 			count++
 			out.WriteString(fmt.Sprintf("%s,%d\n", k, v))
@@ -118,14 +114,4 @@ func main() {
 	os.Rename(resultPath+".tmp", resultPath)
 
 	log.Println(count)
-}
-
-func isServerExist(url string) bool {
-	_, err := http.Get(url)
-	return err == nil
-}
-
-func save(url string, w Word) {
-	postData := fmt.Sprintf(`{"name":"%s","count":%d}`, w.name, w.count)
-	http.Post(url, "application/json", strings.NewReader(postData))
 }

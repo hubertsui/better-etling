@@ -42,32 +42,32 @@ If you want to build your own docker images, please clone this repo, and install
 
    ```powershell
    cd cmd/extracting
-   docker build -t YOURDOCKERACCOUNTNAME/extracting:1.0 .
-   docker push YOURDOCKERACCOUNTNAME/extracting:1.0
+   docker build -t YOURDOCKERACCOUNTNAME/extracting .
+   docker push YOURDOCKERACCOUNTNAME/extracting
    ```
 
 4. Execute the commands below which builds and pushes transforming image to Docker Hub.
 
    ```powershell
    cd ../extracting
-   docker build -t YOURDOCKERACCOUNTNAME/transforming:1.0 .
-   docker push YOURDOCKERACCOUNTNAME/transforming:1.0
+   docker build -t YOURDOCKERACCOUNTNAME/transforming .
+   docker push YOURDOCKERACCOUNTNAME/transforming
    ```
 
 5. Execute the commands below which builds and pushes loading image to Docker Hub.
 
    ```powershell
    cd ../extracting
-   docker build -t YOURDOCKERACCOUNTNAME/loading:1.0 .
-   docker push YOURDOCKERACCOUNTNAME/loading:1.0
+   docker build -t YOURDOCKERACCOUNTNAME/loading .
+   docker push YOURDOCKERACCOUNTNAME/loading
    ```
 
 6. Execute the commands below which builds and pushes rendering image to Docker Hub.
 
    ```powershell
    cd ../extracting
-   docker build -t YOURDOCKERACCOUNTNAME/rendering:1.0 .
-   docker push YOURDOCKERACCOUNTNAME/rendering:1.0
+   docker build -t YOURDOCKERACCOUNTNAME/rendering .
+   docker push YOURDOCKERACCOUNTNAME/rendering
    ```
 
 ## Create Azure Storage Account and File Share

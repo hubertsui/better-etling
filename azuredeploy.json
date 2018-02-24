@@ -18,19 +18,19 @@
         },
         "extractingContainerImage": {
             "type": "string",
-            "defaultValue": "hubertsui/extracting:1.1"
+            "defaultValue": "hubertsui/extracting"
         },
         "transformingContainerImage": {
             "type": "string",
-            "defaultValue": "hubertsui/transforming:1.2"
+            "defaultValue": "hubertsui/transforming"
         },
         "loadingContainerImage": {
             "type": "string",
-            "defaultValue": "hubertsui/loading:1.2"
+            "defaultValue": "hubertsui/loading"
         },
         "renderingContainerImage": {
             "type": "string",
-            "defaultValue": "hubertsui/rendering:1.1"
+            "defaultValue": "hubertsui/rendering"
         }
     },
     "variables": {
