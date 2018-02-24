@@ -18,27 +18,27 @@
 
 Making ETLing simpler using containers as a plug and play model.
 
-The application with separate common pieces of the ETLing process into separate docker containers. For example, the unzip container in the project will takes a link as input then downloads and unzips the file at that link. A separate container can take a csv location as input and put it into a postgres database. This allows for plug and play ETLing pipelines for the data.
+The application with separate common pieces of the ETLing process into separate docker containers. For example, the unzip container in the project will take a link as an input then download and unzip the file at that link. A separate container takes a csv location as an input and puts it into a Postgres database. This allows for plug and play ETLing pipelines for the data.
 
-Using ACI, a user can define container groups with the exact elements they want. For example put the unzip and postgres modules together and can download a zip file from a datasource, unzip it then feed it into a databases all without writing a line of code. Also only pay per second usign the ACI instance. 
+Using ACI, a user can define container groups with the exact elements they want. For example put the unzip and postgres modules together and to download a zip file from a datasource, unzip it then feed it into a databases all without writing a line of code. This allows you to only pay per second using the ACI instance. 
 
-This document will guide you to deploy the solution to your environment.
+This document will guide you through the steps to deploy the solution to your environment.
 
-First, an Azure AAD is required to register the app registrations. In this document, the Azure AAD will be called "ETL AAD", and an account in ETL AAD will be called ETL work account.
+An Azure Active Directory (AAD) is required to register the app registrations. In this document, the AAD will be called "ETL AAD", and an account in the ETL AAD will be called ETL work account.
 
-* All app registrations should be created in the ETL AAD. 
+* All app registrations are created in the ETL AAD. 
 
-An Azure Subscription is required to deploy the Azure components. We will use the [ARM Template](azuredeploy.json) to deploy these Azure components automatically. 
+An Azure Subscription is required to deploy the Azure components. The [ARM Template](azuredeploy.json) deploys these Azure components automatically. 
 
-If you want to build your own docker images, please clone this repo, and install docker on your own computer.
+If you want to build your own Docker images, please clone this repository, and install Docker on your own computer.
 
 ## Build Docker Images
 
-1. Clone the repo with Visual Studio Code.
+1. Clone the repository with Visual Studio Code.
 
 2. Open **View > Integrated Terminal**.
 
-3. Execute the commands below which builds and pushes extracting image to Docker Hub.
+3. Execute the commands below to build and push the extracting image to the Docker Hub.
 
    ```powershell
    cd cmd/extracting
@@ -46,7 +46,7 @@ If you want to build your own docker images, please clone this repo, and install
    docker push YOURDOCKERACCOUNTNAME/extracting
    ```
 
-4. Execute the commands below which builds and pushes transforming image to Docker Hub.
+4. Execute the commands below to build and push the transforming image to the Docker Hub.
 
    ```powershell
    cd ../extracting
@@ -54,7 +54,7 @@ If you want to build your own docker images, please clone this repo, and install
    docker push YOURDOCKERACCOUNTNAME/transforming
    ```
 
-5. Execute the commands below which builds and pushes loading image to Docker Hub.
+5. Execute the commands below to build and push the loading image to the Docker Hub.
 
    ```powershell
    cd ../extracting
@@ -62,7 +62,7 @@ If you want to build your own docker images, please clone this repo, and install
    docker push YOURDOCKERACCOUNTNAME/loading
    ```
 
-6. Execute the commands below which builds and pushes rendering image to Docker Hub.
+6. Execute the commands below to build and push the rendering image to the Docker Hub.
 
    ```powershell
    cd ../extracting
@@ -72,19 +72,19 @@ If you want to build your own docker images, please clone this repo, and install
 
 ## Create Azure Storage Account and File Share
 
-1. Open the Shell in Azure Portal
+1. Open the **Shell** in the Azure Portal.
 
    ![](images/deploy-01.png)
 
-2. Execute the commands below to choose subscription.
+2. Execute the command below to choose your subscription.
 
    ```powershell
    az account set --subscription SELECTED_SUBSCRIPTION_ID
    ```
 
-3. Execute the commands below which creates a new resource group.
+3. Execute the commands below to create a new resource group.
 
-   > Note: Change the placeholder `[RESOURCE_GROUP_NAME]` to a new resource group to be created.
+   > **Note:** Change the placeholder `[RESOURCE_GROUP_NAME]` to the name for the new resource group you will create.
    
    ```powershell
    ACI_PERS_RESOURCE_GROUP=[RESOURCE_GROUP_NAME]
@@ -94,7 +94,7 @@ If you want to build your own docker images, please clone this repo, and install
    az group create --location eastus --name $ACI_PERS_RESOURCE_GROUP
    ```
 
-4. Execute the commands below which creates the storage account.
+4. Execute the commands below to create the storage account.
 
    ```powershell
    az storage account create \
@@ -104,14 +104,14 @@ If you want to build your own docker images, please clone this repo, and install
     --sku Standard_LRS
    ```
 
-5. Execute the commands below which creates the file share.
+5. Execute the commands below to create the file share.
 
    ```powershell
    export AZURE_STORAGE_CONNECTION_STRING=`az storage account show-connection-string --resource-group $ACI_PERS_RESOURCE_GROUP --name $ACI_PERS_STORAGE_ACCOUNT_NAME --output tsv`
    az storage share create -n $ACI_PERS_SHARE_NAME
    ```
 
-6. Execute the commands below which shows the storage account created previously.
+6. Execute the commands below to shows the storage account you created.
 
    ```powershell
    echo $ACI_PERS_STORAGE_ACCOUNT_NAME
@@ -120,34 +120,34 @@ If you want to build your own docker images, please clone this repo, and install
 
 ## Deploy Azure Components
 
-1. Click this button to navigate to Azure portal deployment page.
+1. Click this button to navigate to the Azure Portal deployment page.
 
    [![Deploy to Azure](https://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fhubertsui%2Fbetter-etling%2Fmaster%2Fazuredeploy.json)
 
-2. Choose the resource group created in previous steps.
+2. Choose the resource group created in the previous steps.
 
 3. Fill in the values on the deployment page.
-   * **Storage Account Name**: the name of the storage account created in previous steps.
-   * **Storage Share Name**: the name of the file share created in previous steps, which is `acishare` by default.
-   * **Administrator Login**:  the user name of the postgres database.
-   * **Administrator Login Password**: the password of the postgres database, it must meet the complexity requirements, e.g. `password123!@#` .
-   * **Extracting Container Image**: the docker image you build for extracting container.
-   * **Transforming Container Image**: the docker image you build for transforming container.
-   * **Loading Container Image**: the docker image you build for loading container.
-   * **Rendering Container Image**: the docker image you build for rendering container.
+   * **Storage Account Name**: the name of the storage account created in the previous steps
+   * **Storage Share Name**: the name of the file share created in the previous steps, which is `acishare` by default
+   * **Administrator Login**:  the user name of the Postgres database
+   * **Administrator Login Password**: the password of the Postgres database, it must meet the complexity requirements, e.g. `password123!@#`
+   * **Extracting Container Image**: the Docker image you built for the extracting container
+   * **Transforming Container Image**: the docker image you built for the transforming container
+   * **Loading Container Image**: the docker image you built for the loading container
+   * **Rendering Container Image**: the docker image you built for the rendering container
    * Check **I agree to the terms and conditions stated above**.
 
    ![](images/deploy-03.png)
 
-4. Click **Purchase**.
+4. Click **Purchase**
 
 ## Check the Demo
 
-1. Open the resource group just created.
+1. Open the resource group you just created.
 
    ![](images/deploy-04.png)
 
-2. Click the container group **MS-ACIAKS-ETLContainerGroups**, state of the first 3 containers are **Terminated**, while the last one is always **Running** to serve the Word Cloud.
+2. Click the container group **MS-ACIAKS-ETLContainerGroups**, notice the state of the first 3 containers is **Terminated**, while the last one is always **Running** to serve the Word Cloud.
 
    ![](images/deploy-05.png)
 
