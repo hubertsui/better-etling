@@ -175,9 +175,9 @@ An Azure Subscription is required to deploy the Azure components. The [ARM Templ
 
    ![](images/deploy-07.png)
 
-3. Download and install [pgAdmin](https://www.pgadmin.org/download/), then open it.
+3. Download and install [pgAdmin](https://www.pgadmin.org/download/), then run it.
 
-4. Right click on **Servers**, then Choose **Create > Server...** 
+4. Right click on **Servers**, then choose **Create > Server...** 
 
    ![](images/deploy-08.png)
 
@@ -194,11 +194,11 @@ An Azure Subscription is required to deploy the Azure components. The [ARM Templ
 
    ![](images/deploy-10.png)
 
-7. Expend the **PGAzure > postgres > Schemas(1) > public > Tables(1)**, right click on **words**, then choose **View/Edit Data > First 100 Rows**.
+7. Expend the **PGAzure > Databases > postgres > Schemas > public > Tables**, right click on the **words** table, then choose **View/Edit Data > First 100 Rows**.
 
    ![](images/deploy-11.png)
 
-8. Now you can see the data like this
+8. Now you can see the word count data like this.
 
    ![](images/deploy-12.png)
 
