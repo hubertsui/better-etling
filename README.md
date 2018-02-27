@@ -1,5 +1,7 @@
 # Extracting, transforming, and loading data with ACI
 
+In this sample, we're trying to do some basic analysis on the [HappyDB](https://github.com/rit-public/HappyDB) dataset, by doing word count and drawing word cloud, to highlight the words appear more frequently in the people's happy moments.
+
 **Table of content**
 
 [Foreword](#foreword)
@@ -30,9 +32,9 @@ An Azure Active Directory (AAD) is required to register the app registrations. I
 
 An Azure Subscription is required to deploy the Azure components. The [ARM Template](azuredeploy.json) deploys these Azure components automatically. 
 
-If you want to build your own Docker images, please clone this repository, and install Docker on your own computer.
-
 ## Build Docker Images
+
+   > **Note:** The following commands are running on your own computer.
 
 1. Clone the repository with Visual Studio Code.
 
@@ -71,6 +73,8 @@ If you want to build your own Docker images, please clone this repository, and i
    ```
 
 ## Create Azure Storage Account and File Share
+
+> **Note:** The following commands are running on Azure Portal.
 
 1. Open the **Shell** in the Azure Portal.
 
