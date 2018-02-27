@@ -14,6 +14,10 @@ In this sample, we're trying to do some basic analysis on the [HappyDB](https://
 
 [Check the Demo](#check-the-demo)
 
+* [View in Web](#view-in-web)
+
+* [Query Data in Postgres](#query-data-in-postgres)
+
 [References](#references)
 
 ## Foreword
@@ -147,6 +151,8 @@ An Azure Subscription is required to deploy the Azure components. The [ARM Templ
 
 ## Check the Demo
 
+### View in Web
+
 1. Open the resource group you just created.
 
    ![](images/deploy-04.png)
@@ -158,6 +164,44 @@ An Azure Subscription is required to deploy the Azure components. The [ARM Templ
 3. Copy the **IP address** from the container group blade, and open it in the browser to check the Word Cloud.
 
    ![](images/deploy-06.png)
+
+### Query Data in Postgres
+
+1. Open the resource group you just created.
+
+   ![](images/deploy-04.png)
+
+2. Click the **postgres** database, remember the **Server name** and **Server admin login name**.
+
+   ![](images/deploy-07.png)
+
+3. Download and install [pgAdmin](https://www.pgadmin.org/download/), then open it.
+
+4. Right click on **Servers**, then Choose **Create > Server...** 
+
+   ![](images/deploy-08.png)
+
+5. In **General** tab, fill the **Name** field, e.g. `PGAzure`
+
+   ![](images/deploy-09.png)
+
+6. In **Connection** tab, fill the following fields then click **Save**.
+
+   * **Host name/address**: please input the **Server name** in previous step.
+   * **Username**: please input the **Server admin login name** in previous step.
+   * **Password**:  the **Administrator Login Password** you set in deployment.
+   * Check **Save password?**.
+
+   ![](images/deploy-10.png)
+
+7. Expend the **PGAzure > postgres > Schemas(1) > public > Tables(1)**, right click on **words**, then choose **View/Edit Data > First 100 Rows**.
+
+   ![](images/deploy-11.png)
+
+8. Now you can see the data like this
+
+   ![](images/deploy-12.png)
+
 
 ## References
 1. Akari Asai, Sara Evensen, Behzad Golshan, Alon Halevy, Vivian Li, Andrei Lopatenko, Daniela Stepanov, Yoshihiko Suhara, Wang-Chiew Tan, Yinzhan Xu, 
