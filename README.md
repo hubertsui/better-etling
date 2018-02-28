@@ -193,6 +193,7 @@ An Azure Subscription is required to deploy the Azure components. The [ARM Templ
    ```powershell
    psql --host=<Server name> --username=<Server admin login name> --dbname=postgres
    ```
+   
 6. Run the following SQL command to create an index to table **words**
 
     ```SQL
@@ -204,7 +205,7 @@ An Azure Subscription is required to deploy the Azure components. The [ARM Templ
     SELECT * FROM words LIMIT 10;
     ```
 
-8. Now you can see the data like this
+8. Now you can see the word count data like this.
 
    ![](images/deploy-08.png)
 
