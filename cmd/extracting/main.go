@@ -3,8 +3,6 @@ package main
 import (
 	"log"
 	"os"
-
-	"github.com/hubertsui/better-etling/util/downloader"
 )
 
 var (
@@ -25,7 +23,7 @@ func main() {
 		filePath = defaultFilePath
 	}
 
-	err := downloader.DownloadFile(filePath, fileURL)
+	err := DownloadFile(filePath, fileURL)
 	if err != nil {
 		log.Fatal(err)
 	}
