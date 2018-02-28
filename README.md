@@ -14,9 +14,9 @@ In this sample, we're trying to do some basic analysis on the [HappyDB](https://
 
 [Check the Demo](#check-the-demo)
 
-* [View in Web](#view-in-web)
+* [View Demo in Web](#view-demo-in-web)
 
-* [Query Data in Postgres](#query-data-in-postgres)
+* [Create Index and Query Data in Azure Shell](#create-index-and-query-data-in-azure-shell)
 
 [References](#references)
 
@@ -138,7 +138,7 @@ An Azure Subscription is required to deploy the Azure components. The [ARM Templ
    * **Storage Account Name**: the name of the storage account created in the previous steps
    * **Storage Share Name**: the name of the file share created in the previous steps, which is `acishare` by default
    * **Administrator Login**:  the user name of the Postgres database
-   * **Administrator Login Password**: the password of the Postgres database, it must meet the complexity requirements, e.g. `password123!@#`
+   * **Administrator Login Password**: the password of the Postgres database, it must meet the complexity requirements, e.g. `postgres1!`
    * **Extracting Container Image**: the Docker image you built for the extracting container
    * **Transforming Container Image**: the docker image you built for the transforming container
    * **Loading Container Image**: the docker image you built for the loading container
@@ -151,7 +151,7 @@ An Azure Subscription is required to deploy the Azure components. The [ARM Templ
 
 ## Check the Demo
 
-### View in Web
+### View Demo in Web
 
 1. Open the resource group you just created.
 
@@ -165,7 +165,9 @@ An Azure Subscription is required to deploy the Azure components. The [ARM Templ
 
    ![](images/deploy-06.png)
 
-### Query Data in Postgres
+### Create Index and Query Data in Azure Shell
+
+> **Note:** The following commands are running on Azure Portal.
 
 1. Open the resource group you just created.
 
@@ -175,32 +177,36 @@ An Azure Subscription is required to deploy the Azure components. The [ARM Templ
 
    ![](images/deploy-07.png)
 
-3. Download and install [pgAdmin](https://www.pgadmin.org/download/), then open it.
+3. Open the **Shell** in the Azure Portal.
 
-4. Right click on **Servers**, then Choose **Create > Server...** 
+   ![](images/deploy-01.png)
 
-   ![](images/deploy-08.png)
+4. Add the updated Azure Database for PostgreSQL management extension using the following command.
 
-5. In **General** tab, fill the **Name** field, e.g. `PGAzure`
+   ```powershell
+   az extension add --name rdbms
+   ```
 
-   ![](images/deploy-09.png)
+5. Run the following psql command then input the **Administrator Login Password** in deployment to connect to an Azure Database for PostgreSQL database.
+    > **Note:** Please replace the **&lt;Server name&gt;** and **&lt;Server admin login name&gt;** to values in postgres dashboard.
 
-6. In **Connection** tab, fill the following fields then click **Save**.
+   ```powershell
+   psql --host=<Server name> --username=<Server admin login name> --dbname=postgres
+   ```
+6. Run the following SQL command to create an index to table **words**
 
-   * **Host name/address**: please input the **Server name** in previous step.
-   * **Username**: please input the **Server admin login name** in previous step.
-   * **Password**:  the **Administrator Login Password** you set in deployment.
-   * Check **Save password?**.
+    ```SQL
+    CREATE INDEX ON words(name);
+    ```
+6. Run the following SQL command to query first 10 records in **words**
 
-   ![](images/deploy-10.png)
-
-7. Expend the **PGAzure > postgres > Schemas(1) > public > Tables(1)**, right click on **words**, then choose **View/Edit Data > First 100 Rows**.
-
-   ![](images/deploy-11.png)
+    ```SQL
+    SELECT * FROM words LIMIT 10;
+    ```
 
 8. Now you can see the data like this
 
-   ![](images/deploy-12.png)
+   ![](images/deploy-08.png)
 
 
 ## References
